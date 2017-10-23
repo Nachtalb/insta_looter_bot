@@ -115,6 +115,7 @@ def download(bot: Bot, update: Update, *args):
                 except KeyError:
                     message_sent = True
                     update.message.reply_text('Could not get image number %s.' % index)
+            update.message.reply_text('All images sent! :P')
     except Exception as e:
         message_sent = True
         update.message.reply_text('Could not get requested image[s]')
