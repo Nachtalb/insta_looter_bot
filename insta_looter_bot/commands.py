@@ -174,7 +174,7 @@ def request(bot: Bot, update: Update, args: list):
             of a instagramm user
     """
     if BOTAN_API_TOKEN:
-        botan.track(BOTAN_API_TOKEN, update.message.from_user.id, update.message.to_dict(), '/login')
+        botan.track(BOTAN_API_TOKEN, update.message.from_user.id, update.message.to_dict(), '/request')
     if len(args) < 1:
         update.message.reply_text('Use request like this /request INSTAGRAM_USERNAME')
     current_dir = os.path.dirname(os.path.realpath(__file__))
