@@ -1,5 +1,8 @@
 import os
 import re
+import shutil
+from uuid import uuid4
+import io
 
 from botanio import botan
 from instaLooter import InstaLooter
@@ -97,8 +100,12 @@ def download(bot: Bot, update: Update, *args):
         if path.startswith('/p/'):
             post_token = path.replace('/p/', '').split('?', 1)[0].strip(' /')
             try:
-                image_url = looter.get_post_info(post_token)['display_src']
-                bot.send_photo(update.message.chat_id, photo=image_url)
+                post = looter.get_post_info(post_token)
+                if post['is_video']:
+                    video = post.get('video_url', download_to_object(post))
+                    bot.send_video(update.message.chat_id, video=video)
+                else:
+                    bot.send_photo(update.message.chat_id, photo=post['display_src'])
                 image_sent = True
             except KeyError:
                 message_sent = True
@@ -109,12 +116,15 @@ def download(bot: Bot, update: Update, *args):
             media_generator = looter.medias(with_pbar=True)
             for index, media in enumerate(media_generator):
                 try:
-                    image_url = media['display_src']
-                    bot.send_photo(update.message.chat_id, photo=image_url)
+                    if media['is_video']:
+                        video = media.get('video_url', download_to_object(media))
+                        bot.send_video(update.message.chat_id, video=video)
+                    else:
+                        bot.send_photo(update.message.chat_id, photo=media['display_src'])
                     image_sent = True
                 except KeyError:
                     message_sent = True
-                    update.message.reply_text('Could not get image number %s.' % index)
+                    update.message.reply_text('Could not get image/video number %s.' % (index + 1))
             update.message.reply_text('All images sent! :P')
     except Exception as e:
         message_sent = True
@@ -123,6 +133,35 @@ def download(bot: Bot, update: Update, *args):
 
     if not message_sent and not image_sent:
         update.message.reply_text('Could not get requested image[s], maybe the profile is private.')
+
+
+def download_to_object(media):
+    """Download a post to a file like bytes object.
+
+    Args:
+        media (:obj:`dict`): A post dictionary given by the instagram api
+
+    Returns:
+        File like object of the image or video
+    """
+    global looter
+    post_code = media['code']
+    post_id = media['id']
+    is_video = media['is_video']
+
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    temp_dir = os.path.join(current_dir, str(uuid4())[:8])
+    looter.directory = temp_dir
+    if temp_dir is not None and not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+    looter.download_post(post_code)
+    filename = post_id
+    filename += '.mp4' if is_video else '.jpg'
+    with open(os.path.join(temp_dir, filename), 'rb') as post_file:
+        file_object = io.BytesIO(post_file.read())
+
+    shutil.rmtree(temp_dir)
+    return file_object
 
 
 def request(bot: Bot, update: Update, args: list):
