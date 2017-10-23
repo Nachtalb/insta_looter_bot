@@ -8,10 +8,21 @@ from telegram.parsemode import ParseMode
 
 from .settings import BOTAN_API_TOKEN, INSTA_USERNAME, INSTA_PASSWORD
 
-looter = InstaLooter()
+looter = None
 
-if INSTA_USERNAME and INSTA_PASSWORD:
-    looter.login(INSTA_USERNAME, INSTA_PASSWORD)
+
+def new_looter(*args, **kwargs):
+    """Create a new looter with the given parameters
+
+    Args:
+        *args: All the parameters as in :class:`instaLooter.core.InstaLooter`
+        **kwargs: All the parameters as in :class:`instaLooter.core.InstaLooter`
+    """
+    global looter
+    looter = InstaLooter(*args, **kwargs)
+
+    if INSTA_USERNAME and INSTA_PASSWORD:
+        looter.login(INSTA_USERNAME, INSTA_PASSWORD)
 
 
 def start(bot: Bot, update: Update):
@@ -94,8 +105,8 @@ def download(bot: Bot, update: Update, *args):
                 update.message.reply_text('Could not get image, maybe user is private.')
         else:
             username = path.split('?', 1)[0].strip(' /')
-            looter.profile = username
-            media_generator = looter.medias()
+            new_looter(profile=username)
+            media_generator = looter.medias(with_pbar=True)
             for index, media in enumerate(media_generator):
                 try:
                     image_url = media['display_src']
@@ -104,9 +115,10 @@ def download(bot: Bot, update: Update, *args):
                 except KeyError:
                     message_sent = True
                     update.message.reply_text('Could not get image number %s.' % index)
-    except:
+    except Exception as e:
         message_sent = True
         update.message.reply_text('Could not get requested image[s]')
+        raise e
 
     if not message_sent and not image_sent:
         update.message.reply_text('Could not get requested image[s], maybe the profile is private.')
