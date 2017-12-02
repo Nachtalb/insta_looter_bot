@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d06d0aa818c85a6b1489476168161cd43d87265041b82bbbd2c457949cd7aa58"
+            "sha256": "37200fbcd0702e240905051712a556a5a5a946b9b70bd2a6b611fc2cedf6d78f"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -9,9 +9,9 @@
             "os_name": "posix",
             "platform_machine": "x86_64",
             "platform_python_implementation": "CPython",
-            "platform_release": "4.9.0-deepin12-amd64",
+            "platform_release": "4.9.0-deepin13-amd64",
             "platform_system": "Linux",
-            "platform_version": "#1 SMP PREEMPT Deepin 4.9.40-3 (2017-09-19)",
+            "platform_version": "#1 SMP PREEMPT Deepin 4.9.57-1 (2017-10-19)",
             "python_full_version": "3.6.3",
             "python_version": "3.6",
             "sys_platform": "linux"
@@ -39,10 +39,10 @@
         },
         "certifi": {
             "hashes": [
-                "sha256:54a07c09c586b0e4c619f02a5e94e36619da8e2b053e20f594348c0611803704",
-                "sha256:40523d2efb60523e113b44602298f0960e900388cf3bb6043f645cf57ea9e3f5"
+                "sha256:244be0d93b71e93fc0a0a479862051414d0e00e16435707e5bf5000f92e04694",
+                "sha256:5ec74291ca1136b40f0379e1128ff80e866597e4e2c1e755739a913bbc3613c0"
             ],
-            "version": "==2017.7.27.1"
+            "version": "==2017.11.5"
         },
         "chardet": {
             "hashes": [
