@@ -9,7 +9,6 @@ name = "pypi"
 
 python-telegram-bot = "*"
 instalooter = "*"
-botanio = "*"
 
 
 [dev-packages]

@@ -4,12 +4,11 @@ import shutil
 from uuid import uuid4
 import io
 
-from botanio import botan
 from instaLooter import InstaLooter
 from telegram import Bot, Update
 from telegram.parsemode import ParseMode
 
-from .settings import BOTAN_API_TOKEN, INSTA_USERNAME, INSTA_PASSWORD
+from .settings import INSTA_USERNAME, INSTA_PASSWORD
 
 looter = None
 
@@ -35,9 +34,6 @@ def start(bot: Bot, update: Update):
         bot (:obj:`telegram.bot.Bot`): Telegram Api Bot Object.
         update (:obj:`telegram.update.Update`): Telegram Api Update Object
     """
-    if BOTAN_API_TOKEN:
-        botan.track(BOTAN_API_TOKEN, update.message.from_user.id, update.message.to_dict(), '/start')
-
     reply = ("""*Insta Looter Bot*
 
 [@insta_looter_bot](https://t.me/insta_looter_bot)
@@ -81,8 +77,6 @@ def download(bot: Bot, update: Update, *args):
         bot (:obj:`telegram.bot.Bot`): Telegram Api Bot Object.
         update (:obj:`telegram.update.Update`): Telegram Api Update Object
     """
-    if BOTAN_API_TOKEN:
-        botan.track(BOTAN_API_TOKEN, update.message.from_user.id, update.message.to_dict(), '/download')
     image_sent = False
     message_sent = False
 
@@ -173,8 +167,6 @@ def request(bot: Bot, update: Update, args: list):
         args (:obj:`list`): List of arguments passed by the user. First argument must be set and must be the username
             of a instagramm user
     """
-    if BOTAN_API_TOKEN:
-        botan.track(BOTAN_API_TOKEN, update.message.from_user.id, update.message.to_dict(), '/request')
     if len(args) < 1:
         update.message.reply_text('Use request like this /request INSTAGRAM_USERNAME')
     current_dir = os.path.dirname(os.path.realpath(__file__))
@@ -189,6 +181,4 @@ def unknown(bot: Bot, update: Update):
         bot (:obj:`telegram.bot.Bot`): Telegram Api Bot Object.
         update (:obj:`telegram.update.Update`): Telegram Api Update Object
     """
-    if BOTAN_API_TOKEN:
-        botan.track(BOTAN_API_TOKEN, update.message.from_user.id, update.message.to_dict(), 'unknown')
     update.message.reply_text("Sorry, I didn't understand that command.")
