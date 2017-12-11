@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+
+echo files changed: $(git diff $oldrev $newrev --diff-filter=ACDMR --name-only | wc -l)
+
+umask 002
+
+git submodule sync && git submodule update --init --recursive
+echo "Restarting insta_looter_bot.service"
+systemctl --user restart insta_looter_bot.service
+echo "Restarted"

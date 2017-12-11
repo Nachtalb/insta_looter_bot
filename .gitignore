@@ -102,3 +102,6 @@ ENV/
 
 ### Insta Looter Bot
 settings.py
+log/
+tmp/
+
